@@ -34,9 +34,57 @@ more parameters .
 */
 
 #include<stdlib.h>
+#include<stdio.h>
+#include<stdio.h>
+
+int maze_present(int *maze, int rows, int columns, int x1, int y1)
+{
+	if (x1 >= 0 && x1 < rows && y1 >= 0 && y1 < columns && maze[x1*columns + y1] == 1)
+		return 1;
+	return 0;
+}
+int maze_path(int *maze, int rows, int columns, int x1, int y1, int x2, int y2, int *path)
+{
+	if (x1 == x2 && y1 == y2)
+	{
+		path[x1*columns + y1] = 1;
+		return 1;
+	}
+	if (maze_present((int *)maze, rows, columns, x1, y1) == 1)
+	{
+
+		path[x1*columns + y1] = 1;
+		if (rows == 1)
+			if (maze_path(maze, rows, columns, x1, y1 + 1, x2, y2, path) == 1)
+				return 1;
+
+		if (columns == 1)
+			if (maze_path(maze, rows, columns, x1 + 1, y1, x2, y2, path) == 1)
+				return 1;
+
+		if (rows>1 && columns >1){
+			if ( maze_path(maze, rows, columns, x1, y1 + 1, x2, y2, path) == 1
+				|| maze_path(maze, rows, columns, x1 + 1, y1, x2, y2, path) == 1
+				|| maze_path(maze, rows, columns, x1 - 1, y1, x2, y2, path) == 1
+				|| maze_path(maze, rows, columns, x1, y1 - 1, x2, y2, path) == 1)
+				return 1;
+		}
+		path[x1*columns + y1] = 0;
+		return 0;
+	}
+	return 0;
+}
 
 
 int path_exists(int *maze, int rows, int columns, int x1, int y1, int x2, int y2)
 {
+	int index, path[50];
+
+	if (x1 >= rows || y1 >= columns || x2 >= rows || y2 >= columns || maze[x2*columns + y2] == 0)
+		return 0;
+	for (index = 0; index < rows*columns; index++)
+		path[index] = 0;
+	if (maze_path(maze, rows, columns, 0, 0, x2, y2, path) == 0)
+		return 0;
 	return 1;
 }
