@@ -23,8 +23,22 @@
 */
 #include "stdafx.h"
 
+int isPresent[25];
+int fibonaci(int num)
+{
+	if (num <= 1)
+		return num;
 
+	if (isPresent[num] != -1) // if nums fibonaci is already calculated directly take the resultant
+		return isPresent[num];
+
+	return fibonaci(num - 1) + fibonaci(num - 2); 
+}
 int get_steps(int s)
 {
-	return 0;
+	int index;
+	for (index = 0; index <= s + 1; index++)
+		isPresent[index] = -1; // It indicates not calculated at that particular step 
+
+	return fibonaci(s + 1);
 }
