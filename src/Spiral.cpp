@@ -34,7 +34,36 @@ Note : Check the function Parameters ,Its a double pointer .
 #include "stdafx.h"
 #include<stdlib.h>
 
+void generateSpiral(int left, int right, int top, int bottom, int **input_array, int *output_array, int output_index)
+{
+	int index;
+
+	if (left > right || top > bottom)
+		return;
+
+	for (index = left; index <= right; index++)
+		output_array[output_index++] = input_array[top][index];
+	for (index = top + 1; index <= bottom; index++)
+		output_array[output_index++] = input_array[index][right];
+
+	if (top != bottom)
+		for (index = right - 1; index >= left; index--)
+			output_array[output_index++] = input_array[bottom][index];
+	if (left != right)
+		for (index = bottom - 1; index > top; index--)
+			output_array[output_index++] = input_array[index][left];
+
+
+	generateSpiral(left + 1, right - 1, top + 1, bottom - 1, input_array, output_array, output_index);
+
+
+}
 int *spiral(int rows, int columns, int **input_array)
 {
-	return NULL;
+	if (rows <= 0 || columns <= 0 || input_array == NULL)
+		return NULL;
+
+	int *output_array = (int *)malloc(rows*columns*sizeof(int));
+	generateSpiral(0, columns - 1, 0, rows - 1, input_array, output_array, 0);
+	return output_array;
 }
